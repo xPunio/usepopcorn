@@ -40,6 +40,18 @@ export function MovieDetails({
         getMovieDetails()
     }, [selectedId])
 
+    useEffect(() => {
+        function handleEscapeClose(e) {
+            if (e.code === 'Escape') {
+                onClose()
+            }
+        }
+        document.addEventListener('keydown', handleEscapeClose)
+        return () => {
+            document.removeEventListener('keydown', handleEscapeClose)
+        }
+    }, [onClose])
+
     function handleAdd() {
         const newWatchedMovie = {
             ...movie,

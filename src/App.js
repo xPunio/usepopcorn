@@ -11,16 +11,19 @@ import { Loader } from './components/loader'
 import { ErrorMessage } from './components/error-message'
 import { MovieDetails } from './components/movieDetails'
 
-const KEY = '5211c462'
+const KEY = process.env.REACT_APP_API_KEY
 
 export default function App() {
     const [query, setQuery] = useState('')
     const [movies, setMovies] = useState([])
-    const [watched, setWatched] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState('')
     const [selectedId, setSelectedId] = useState(null)
 
+    const [watched, setWatched] = useState(() => {
+        const storage = localStorage.getItem('watched')
+        return JSON.parse(storage)
+    })
     useEffect(() => {
         const controller = new AbortController()
 
@@ -58,6 +61,8 @@ export default function App() {
             return
         }
 
+        handleCloseMovie()
+
         fetchMovies()
 
         return () => {
@@ -75,11 +80,22 @@ export default function App() {
 
     function handleAddWatched(movie) {
         setWatched((watched) => [...watched, movie])
+
+        // localStorage.setItem('watched', JSON.stringify([...watched, movie]))
     }
 
     function handleRemoveWatched(id) {
         setWatched((watched) => watched.filter((movie) => movie.imdbID !== id))
+
+        // localStorage.setItem(
+        //     'watched',
+        //     JSON.stringify(watched.filter((movie) => movie.imdbID !== id))
+        // )
     }
+
+    useEffect(() => {
+        localStorage.setItem('watched', JSON.stringify(watched))
+    }, [watched])
 
     return (
         <>
