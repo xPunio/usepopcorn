@@ -116,11 +116,11 @@ export function MovieDetails({
                                 </p>
                             )}
                         </div>
-                        <p>
+                        <div>
                             <em>{movie.Plot}</em>
                             <p>Starring {movie.Actors}</p>
                             <p>Directed by {movie.Director}</p>
-                        </p>
+                        </div>
                     </section>
                 </>
             )}
