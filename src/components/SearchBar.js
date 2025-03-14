@@ -1,11 +1,15 @@
-import { useRef, useEffect } from 'react'
+import { useRef } from 'react'
+import { useKey } from '../hooks/useKey'
 
 export function SearchBar({ query, setQuery }) {
     const inputElement = useRef(null)
 
-    useEffect(() => {
+    function handleEnter() {
         inputElement.current.focus()
-    }, [])
+        setQuery('')
+    }
+
+    useKey('Enter', handleEnter)
 
     return (
         <input

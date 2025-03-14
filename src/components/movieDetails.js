@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Rating } from './rating'
 import { Loader } from './loader'
-
+import { useKey } from '../hooks/useKey'
 export function MovieDetails({
     selectedId,
     onClose,
@@ -12,6 +12,12 @@ export function MovieDetails({
     const [movie, setMovie] = useState({})
     const [isLoading, setIsLoading] = useState(false)
     const [userRating, setUserRating] = useState('')
+
+    const countRef = useRef(0)
+
+    useEffect(() => {
+        if (userRating) countRef.current++
+    }, [userRating])
 
     const isInWatchedList = !watchedList.some(
         (watchedMovie) => watchedMovie.imdbID === movie.imdbID
@@ -38,19 +44,9 @@ export function MovieDetails({
             }
         }
         getMovieDetails()
-    }, [selectedId])
+    }, [selectedId, KEY])
 
-    useEffect(() => {
-        function handleEscapeClose(e) {
-            if (e.code === 'Escape') {
-                onClose()
-            }
-        }
-        document.addEventListener('keydown', handleEscapeClose)
-        return () => {
-            document.removeEventListener('keydown', handleEscapeClose)
-        }
-    }, [onClose])
+    useKey('Escape', onClose)
 
     function handleAdd() {
         const newWatchedMovie = {
@@ -58,6 +54,7 @@ export function MovieDetails({
             imdbRating: Number(movie.imdbRating),
             runtime: Number(movie.Runtime.split(' ').at(0)),
             userRating,
+            countRatingDecisions: countRef.current,
         }
         onAddWatched(newWatchedMovie)
         onClose()

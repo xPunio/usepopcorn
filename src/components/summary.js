@@ -1,5 +1,4 @@
 import { average } from '../utils/general-functions'
-import { useState } from 'react'
 
 export function Summary({ watched }) {
     const avgImdbRating = average(watched.map((movie) => movie.imdbRating))
