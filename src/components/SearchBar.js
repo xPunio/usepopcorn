@@ -4,12 +4,11 @@ import { useKey } from '../hooks/useKey'
 export function SearchBar({ query, setQuery }) {
     const inputElement = useRef(null)
 
-    function handleEnter() {
+    useKey('Enter', () => {
+        if (document.activeElement === inputElement.current) return
         inputElement.current.focus()
         setQuery('')
-    }
-
-    useKey('Enter', handleEnter)
+    })
 
     return (
         <input
